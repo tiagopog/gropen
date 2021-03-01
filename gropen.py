@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import re
 import sys
 import subprocess
@@ -78,7 +80,7 @@ def fix_relative_path():
     pass
 
 
-def gropen(path):
+def run(path):
     """
     TODO
     """
@@ -96,4 +98,5 @@ if __name__ == "__main__":
         path = sys.argv[1]
     except IndexError:
         path = None
-    gropen(path)
+
+    run(path)
