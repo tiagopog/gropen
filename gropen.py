@@ -5,11 +5,22 @@ import subprocess
 DEFAULT_PROTOCOL = "https://"
 DEFAULT_REMOTE_NAME = "origin"
 
-PARSE_REGEX = (
+GITHUB_DOMAIN = "github.com"
+BITBUCKET_DOMAIN = "bitbucket.org"
+
+SOURCE_PATH = {GITHUB_DOMAIN: "blob", BITBUCKET_DOMAIN: "src"}
+
+START_LINE_ANCHOR_REGEX = re.compile(r":(\d+)")
+END_LINE_ANCHOR_REGEX = re.compile(r",(\d+)$")
+
+LINE_ANCHOR_REPLACEMENT = {
+    GITHUB_DOMAIN: {"start_line": "#L\\1", "end_line": "-L\\1"},
+    BITBUCKET_DOMAIN: {"start_line": "#lines-\\1", "end_line": ":\\1"},
+}
+
+REMOTE_PARSE_REGEX = (
     r"^{remote_name}\t(https://|git@)(?P<domain>[\w\-\.]+)(\/|:)(?P<path>[\w\-\/]+)"
 )
-
-SOURCE_PATH = {"github.com": "blob", "bitbucket.org": "src"}
 
 
 def run_shell(command):
@@ -24,7 +35,7 @@ def parse_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     """
     TODO
     """
-    pattern = PARSE_REGEX.format(remote_name=remote_name)
+    pattern = REMOTE_PARSE_REGEX.format(remote_name=remote_name)
     match = re.search(pattern, remotes)
     return match.group("domain"), match.group("path") if match else None
 
@@ -42,8 +53,29 @@ def build_remote_url(domain, project_path, branch=None, path=None):
     if not source_path:
         return
 
+    path = fix_line_anchor(domain, path)
     base_uri = "/".join([base_uri, source_path, branch, path])
     return DEFAULT_PROTOCOL + base_uri
+
+
+def fix_line_anchor(domain, path):
+    """
+    TODO
+    """
+    if ":" not in path:
+        return path
+
+    replacement = LINE_ANCHOR_REPLACEMENT[domain]["start_line"]
+    fixed_path = re.sub(START_LINE_ANCHOR_REGEX, replacement, path)
+
+    replacement = LINE_ANCHOR_REPLACEMENT[domain]["end_line"]
+    fixed_path = re.sub(END_LINE_ANCHOR_REGEX, replacement, fixed_path)
+
+    return fixed_path
+
+
+def fix_relative_path():
+    pass
 
 
 def gropen(path):
