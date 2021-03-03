@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import re
 import sys
 import subprocess
@@ -77,7 +75,9 @@ def fix_line_anchor(domain, path):
 
 
 def fix_relative_path():
-    pass
+    """
+    TODO
+    """
 
 
 def run(path):
@@ -93,7 +93,10 @@ def run(path):
     run_shell(f"open {remote_url}")
 
 
-if __name__ == "__main__":
+def main():
+    """
+    TODO
+    """
     try:
         path = sys.argv[1]
     except IndexError:
