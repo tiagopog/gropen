@@ -25,7 +25,7 @@ LINE_ANCHOR_REPLACEMENT = {
 }
 
 REMOTE_PARSE_REGEX = (
-    r"^{remote_name}\t(https://|git@)(?P<domain>[\w\-\.]+)(\/|:)(?P<path>[\w\-\/]+)"
+    r"{remote_name}\t(https://|git@)(?P<domain>[\w\-\.]+)(\/|:)(?P<path>[\w\-\/]+)"
 )
 
 
@@ -57,7 +57,11 @@ def parse_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     """
     pattern = REMOTE_PARSE_REGEX.format(remote_name=remote_name)
     match = re.search(pattern, remotes)
-    return match.group("domain"), match.group("path") if match else None
+
+    if not match:
+        raise UnsupportedRemoteError
+
+    return match.group("domain"), match.group("path")
 
 
 def build_remote_url(domain, project_path, branch, path):
