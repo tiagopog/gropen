@@ -1,14 +1,20 @@
+import os
 import re
 import sys
 import subprocess
 
+CURRENT_DIR_PATH = "."
+
 DEFAULT_PROTOCOL = "https://"
 DEFAULT_REMOTE_NAME = "origin"
+DEFAULT_GIT_BRANCH = "main"
+DEFAULT_SOURCE_PATH = CURRENT_DIR_PATH
 
 GITHUB_DOMAIN = "github.com"
 BITBUCKET_DOMAIN = "bitbucket.org"
 
-SOURCE_PATH = {GITHUB_DOMAIN: "blob", BITBUCKET_DOMAIN: "src"}
+REMOTE_TREE_PATH = {GITHUB_DOMAIN: "tree", BITBUCKET_DOMAIN: "src"}
+REMOTE_SOURCE_PATH = {GITHUB_DOMAIN: "blob", BITBUCKET_DOMAIN: "src"}
 
 START_LINE_ANCHOR_REGEX = re.compile(r":(\d+)")
 END_LINE_ANCHOR_REGEX = re.compile(r",(\d+)$")
@@ -21,6 +27,20 @@ LINE_ANCHOR_REPLACEMENT = {
 REMOTE_PARSE_REGEX = (
     r"^{remote_name}\t(https://|git@)(?P<domain>[\w\-\.]+)(\/|:)(?P<path>[\w\-\/]+)"
 )
+
+
+class UnsupportedRemoteError(Exception):
+    """
+    TODO
+    """
+
+    DEFAULT_MESSAGE = "Error: unsupported remote git repository"
+
+    def __init__(self, message=None):
+        self.message = message or self.DEFAULT_MESSAGE
+
+    def __str__(self):
+        return self.message
 
 
 def run_shell(command):
@@ -40,22 +60,28 @@ def parse_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     return match.group("domain"), match.group("path") if match else None
 
 
-def build_remote_url(domain, project_path, branch=None, path=None):
+def build_remote_url(domain, project_path, branch, path):
     """
     TODO
     """
-    base_uri = "/".join([domain, project_path])
-
-    if None in (branch, path):
-        return DEFAULT_PROTOCOL + base_uri
-
-    source_path = SOURCE_PATH.get(domain)
-    if not source_path:
-        return
-
-    path = fix_line_anchor(domain, path)
-    base_uri = "/".join([base_uri, source_path, branch, path])
+    remote_source_path = get_remote_source_path(domain, path)
+    source_path = "" if path == CURRENT_DIR_PATH else path
+    source_path = fix_line_anchor(domain, source_path)
+    base_uri = "/".join([domain, project_path, remote_source_path, branch, source_path])
     return DEFAULT_PROTOCOL + base_uri
+
+
+def get_remote_source_path(domain, path):
+    """
+    TODO
+    """
+    try:
+        if path == CURRENT_DIR_PATH:
+            return REMOTE_TREE_PATH[domain]
+        else:
+            return REMOTE_SOURCE_PATH[domain]
+    except KeyError:
+        raise UnsupportedRemoteError
 
 
 def fix_line_anchor(domain, path):
@@ -78,6 +104,7 @@ def fix_relative_path():
     """
     TODO
     """
+    pass
 
 
 def run(path):
@@ -88,8 +115,6 @@ def run(path):
     domain, project_path = parse_remotes(remotes)
     branch = run_shell("git rev-parse --abbrev-ref HEAD").rstrip("\n")
     remote_url = build_remote_url(domain, project_path, branch, path)
-
-    print(f"Opening {remote_url}")
     run_shell(f"open {remote_url}")
 
 
@@ -97,9 +122,11 @@ def main():
     """
     TODO
     """
-    try:
-        path = sys.argv[1]
-    except IndexError:
-        path = None
+    has_arguments = len(sys.argv) > 1
+    path = sys.argv[1] if has_arguments else DEFAULT_SOURCE_PATH
 
-    run(path)
+    try:
+        run(path)
+    except UnsupportedRemoteError as error:
+        print(error)
+        os._exit(os.EX_USAGE)
