@@ -3,7 +3,7 @@
 `gropen` (Git Remote Open) is a simple command line application for opening
 local files and directories on remote git repositories.
 
-Supported remote repos:
+Current support:
 
 - [x] GitHub;
 - [x] Bitbucket;
@@ -15,7 +15,7 @@ Supported remote repos:
 pip install gropen
 ```
 
-*NOTE:* `gropen` requires Python 3.6 or greater installed on your environment.
+**NOTE:** `gropen` requires Python 3.6 or greater to be installed on your local environment.
 
 # Usage
 
