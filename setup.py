@@ -22,7 +22,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Unix",
         "Programming Language :: Python :: 3",
-        "Topic :: Git",
         "Topic :: Software Development",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
