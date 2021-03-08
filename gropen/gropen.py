@@ -1,3 +1,8 @@
+"""
+Main module of the command line application.
+It contains all the logic for building and openning URLs of remote repos.
+"""
+
 import os
 import re
 import sys
@@ -31,10 +36,11 @@ REMOTE_PARSE_REGEX = (
 
 class UnsupportedRemoteError(Exception):
     """
-    TODO
+    Error class to be raised when something fails while trying to parse
+    git-related data on the user's local environment.
     """
 
-    DEFAULT_MESSAGE = "Error: unsupported remote git repository"
+    DEFAULT_MESSAGE = "Error: non-existing or unsupported remote git repository"
 
     def __init__(self, message=None):
         self.message = message or self.DEFAULT_MESSAGE
@@ -45,7 +51,7 @@ class UnsupportedRemoteError(Exception):
 
 def run_shell(command):
     """
-    TODO
+    Simple wrapper for shell commands.
     """
     result = subprocess.run(command.split(), stdout=subprocess.PIPE, text=True)
     return result.stdout
@@ -53,7 +59,8 @@ def run_shell(command):
 
 def parse_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     """
-    TODO
+    Parses the result string regarding the remote repos fetched from the
+    local git repository.
     """
     pattern = REMOTE_PARSE_REGEX.format(remote_name=remote_name)
     match = re.search(pattern, remotes)
@@ -66,7 +73,17 @@ def parse_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
 
 def build_remote_url(domain, project_path, branch, path):
     """
-    TODO
+    Builds the URL that will be opened on the user's default browser.
+
+    For instance, "github.com/tiagopog/gropen/blob/main/gropen/gropen.py"
+    gets composed as:
+
+    - domain: "github.com"
+    - project_path: "tiagopog/gropen"
+    - remote_source_path: "blob"
+    - branch: "main"
+    - source_path: "gropen/gropen.py"
+
     """
     remote_source_path = get_remote_source_path(domain, path)
     source_path = "" if path == CURRENT_DIR_PATH else path
@@ -77,7 +94,18 @@ def build_remote_url(domain, project_path, branch, path):
 
 def get_remote_source_path(domain, path):
     """
-    TODO
+    Gets a proper path for source files which may vary for each remote
+    repo supported by gropen. For instance:
+
+    GitHub:
+
+     - path/to/tree/**/
+     - path/to/blob/**/*.*
+
+    Bitbucket:
+
+     - path/to/src/**/*.*
+
     """
     try:
         if path == CURRENT_DIR_PATH:
@@ -90,7 +118,19 @@ def get_remote_source_path(domain, path):
 
 def fix_line_anchor(domain, path):
     """
-    TODO
+    Translates the line number notation (i.e. "path/to/file:n,n") to anchors
+    in the URL that are supported by the remote repos.
+
+    GitHub:
+
+    - "path/to/file:42" => "path/to/file#L42"
+    - "path/to/file:16,32" => "path/to/file#L16-L32"
+
+    Bitbucket:
+
+    - "path/to/file:42" => "path/to/file#lines-10"
+    - "path/to/file:16,32" => "path/to/file#lines-10:12"
+
     """
     if ":" not in path:
         return path
@@ -104,16 +144,20 @@ def fix_line_anchor(domain, path):
     return fixed_path
 
 
-def fix_relative_path():
+def fix_relative_path(path):
     """
-    TODO
+    Makes it possible to gropen files from any given `path` in a
+    git-versioned project.
+
+    TODO: to be implemented.
     """
     pass
 
 
 def run(path):
     """
-    TODO
+    Runs all the steps for building and opening an URL for a given
+    `path` on the remote repo.
     """
     remotes = run_shell("git remote -v")
     domain, project_path = parse_remotes(remotes)
@@ -124,7 +168,7 @@ def run(path):
 
 def main():
     """
-    TODO
+    Command line application's entry point.
     """
     has_arguments = len(sys.argv) > 1
     path = sys.argv[1] if has_arguments else DEFAULT_SOURCE_PATH
