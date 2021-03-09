@@ -48,12 +48,13 @@ gropen gropen/gropen.py:16,32
 
 # TODO
 
-- [x] Add support for remote repos on GitHub;
-- [x] Add support for remote repos on Bitbucket;
-- [ ] Add support for remote repos on GitLab;
+- [x] Add support for GitHub repositories;
+- [x] Add support for Bitbucket repositories;
+- [ ] Add support for GitLab repositories;
 - [x] Open current directory;
 - [x] Open arbitrary directory and files;
 - [x] Point out the line(s) of code to be highlighted;
+- [ ] Open files in a specific commit;
 - [ ] Handle relative paths;
 - [ ] Create Vim plugin;
 - [ ] Create VS Code plugin;

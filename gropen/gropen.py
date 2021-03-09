@@ -1,6 +1,6 @@
 """
 Main module of the command line application.
-It contains all the logic for building and openning URLs of remote repos.
+It contains all the logic for building and openning URLs on remote repos.
 """
 
 import os
@@ -57,7 +57,7 @@ def run_shell(command):
     return result.stdout
 
 
-def parse_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
+def parse_git_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     """
     Parses the result string regarding the remote repos fetched from the
     local git repository.
@@ -160,7 +160,7 @@ def run(path):
     `path` on the remote repo.
     """
     remotes = run_shell("git remote -v")
-    domain, project_path = parse_remotes(remotes)
+    domain, project_path = parse_git_remotes(remotes)
     branch = run_shell("git rev-parse --abbrev-ref HEAD").rstrip("\n")
     remote_url = build_remote_url(domain, project_path, branch, path)
     run_shell(f"open {remote_url}")
