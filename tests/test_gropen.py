@@ -47,6 +47,18 @@ class BuildRemoteURLTest(unittest.TestCase):
 
         self.assertEqual(url, expected_url)
 
+    def test_building_file_path__for_github(self):
+        domain = gropen.GITHUB_DOMAIN
+        project_path = "username/my-project"
+        branch = "release/2.4.8"
+        path = "foo/bar.py"
+        commit = "1217ac95844c1ae1deca58144133d68f3b171056"
+
+        url = gropen.build_remote_url(domain, project_path, branch, path, commit)
+        expected_url = "https://github.com/username/my-project/blob/release/2.4.8/foo/bar.py"
+
+        self.assertEqual(url, expected_url)
+
     def test_building_file_path_with_line_anchor_for_github(self):
         domain = gropen.GITHUB_DOMAIN
         project_path = "username/my-project"
@@ -98,8 +110,22 @@ class BuildRemoteURLTest(unittest.TestCase):
 
         self.assertEqual(url, expected_url)
 
-    def test_building_file_path_in_pathed_branch_for_bitbucket(self):
-        pass
+    def test_building_file_path_in_branch_with_paths_for_bitbucket(self):
+        domain = gropen.BITBUCKET_DOMAIN
+        project_path = "username/my-project"
+        branch = "release/2.4.8"
+        path = "foo/bar.py"
+        commit = "1217ac95844c1ae1deca58144133d68f3b171056"
+
+        url = gropen.build_remote_url(domain, project_path, branch, path, commit)
+
+        expected_url = (
+            "https://bitbucket.org/username/my-project/"
+            "src/1217ac95844c1ae1deca58144133d68f3b171056/"
+            "foo/bar.py"
+        )
+
+        self.assertEqual(url, expected_url)
 
     def test_building_file_path_with_line_anchor_for_bitbucket(self):
         domain = gropen.BITBUCKET_DOMAIN

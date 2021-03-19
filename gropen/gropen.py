@@ -71,7 +71,13 @@ def parse_git_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     return match.group("domain"), match.group("path")
 
 
-def build_remote_url(domain, project_path, branch, path):
+def build_remote_url(
+    domain,
+    project_path,
+    branch=DEFAULT_GIT_BRANCH,
+    path=DEFAULT_SOURCE_PATH,
+    commit=None,
+):
     """
     Builds the URL that will be opened on the user's default browser.
 
@@ -85,24 +91,30 @@ def build_remote_url(domain, project_path, branch, path):
     - source_path: "gropen/gropen.py"
 
     """
-    remote_source_path = get_remote_source_path(domain, path)
+    remote_source_path = build_remote_source_path(domain, path)
+    versioning_path = build_versioning_path(domain, branch, commit)
+
     source_path = "" if path == CURRENT_DIR_PATH else path
     source_path = fix_line_anchor(domain, source_path)
-    base_uri = "/".join([domain, project_path, remote_source_path, branch, source_path])
+
+    base_uri = "/".join(
+        [domain, project_path, remote_source_path, versioning_path, source_path]
+    )
+
     return DEFAULT_PROTOCOL + base_uri
 
 
-def get_remote_source_path(domain, path):
+def build_remote_source_path(domain, path):
     """
-    Gets a proper path for source files which may vary for each remote
-    repo supported by gropen. For instance:
+    Builds a proper path for source files which may vary for each remote
+    repo supported by gropen.
 
-    GitHub:
+    Source path on GitHub:
 
      - path/to/tree/**/
      - path/to/blob/**/*.*
 
-    Bitbucket:
+    Source path on Bitbucket:
 
      - path/to/src/**/*.*
 
@@ -144,6 +156,25 @@ def fix_line_anchor(domain, path):
     return fixed_path
 
 
+def build_versioning_path(domain, branch, commit):
+    """
+    Makes sure to version the source path in accordance with each git
+    remote provider supported by gropen.
+
+    This is pretty much due to some remote repos like Bitbucket not
+    supporting branches with a path in URL paths, for instance, for a
+    branch named as "feature/add-bar":
+
+    * Not supported: https://bitbucket.org/my-account/my-project/src/feature/add-bar/bar.py
+    * Supported: https://bitbucket.org/my-account/my-project/src/366f5aad6900555eb79c8525b95a568928736e1b/bar.py
+
+    """
+    if domain == GITHUB_DOMAIN or "/" not in branch:
+        return branch
+    else:
+        return commit
+
+
 def fix_relative_path(path):
     """
     Makes it possible to gropen files from any given `path` in a
@@ -162,7 +193,8 @@ def run(path):
     remotes = run_shell("git remote -v")
     domain, project_path = parse_git_remotes(remotes)
     branch = run_shell("git rev-parse --abbrev-ref HEAD").rstrip("\n")
-    remote_url = build_remote_url(domain, project_path, branch, path)
+    commit = run_shell("git rev-parse HEAD").rstrip("\n")
+    remote_url = build_remote_url(domain, project_path, branch, path, commit)
     run_shell(f"open {remote_url}")
 
 
