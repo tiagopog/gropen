@@ -3,6 +3,8 @@
 `gropen` (Git Remote Open) is a simple command line application for opening
 local files and directories on remote git repositories.
 
+![gropen_example](https://user-images.githubusercontent.com/760933/111877395-f8a0b400-8981-11eb-98c8-ad5f0a21b78d.gif)
+
 Current support:
 
 - [x] GitHub;
