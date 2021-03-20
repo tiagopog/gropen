@@ -1,5 +1,6 @@
 # gropen
 ![PyPI](https://img.shields.io/pypi/v/gropen)
+[![Maintainability](https://api.codeclimate.com/v1/badges/513113a78c8843c094a2/maintainability)](https://codeclimate.com/github/tiagopog/gropen/maintainability)
 
 `gropen` (Git Remote Open) is a simple command line application for opening
 local files and directories on remote git repositories.
