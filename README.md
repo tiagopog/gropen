@@ -18,7 +18,7 @@ Current support:
 pip install gropen
 ```
 
-**NOTE:** `gropen` requires Python 3.6 or greater to be installed on your local environment.
+**NOTE:** `gropen` requires Python 3.6 or greater installed on your local environment.
 
 # Usage
 
