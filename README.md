@@ -1,4 +1,5 @@
 # gropen
+
 ![PyPI](https://img.shields.io/pypi/v/gropen)
 [![Maintainability](https://api.codeclimate.com/v1/badges/513113a78c8843c094a2/maintainability)](https://codeclimate.com/github/tiagopog/gropen/maintainability)
 
@@ -7,11 +8,17 @@ local files and directories on remote git repositories.
 
 ![gropen_example](https://user-images.githubusercontent.com/760933/111877395-f8a0b400-8981-11eb-98c8-ad5f0a21b78d.gif)
 
-Current support:
+## Supported repos
 
-- [x] GitHub;
-- [x] Bitbucket;
-- [ ] GitLab.
+- [x] GitHub
+- [x] Bitbucket
+- [ ] GitLab
+
+## Supported editors
+
+- [x] Vim ([gropen.vim](https://github.com/tiagopog/gropen.vim))
+- [ ] VS Code
+- [ ] Sublime
 
 # Installation
 
@@ -60,7 +67,7 @@ gropen gropen/gropen.py:16,32
 - [x] Point out the line(s) of code to be highlighted;
 - [ ] Open files in a specific commit;
 - [ ] Handle relative paths;
-- [ ] Create Vim plugin;
+- [x] Create Vim plugin;
 - [ ] Create VS Code plugin;
 - [ ] Create Sublime plugin.
 
