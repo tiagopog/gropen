@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="gropen",
-    version="0.1.1",
+    version="0.1.2",
     author="Tiago Guedes",
     author_email="tiagopog@gmail.com",
     description=description,

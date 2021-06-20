@@ -57,6 +57,38 @@ def run_shell(command):
     return result.stdout
 
 
+def extract_paths(path):
+    """
+    Extracts some directory/file paths of interest for other gropen functions.
+    """
+    working_dir = os.path.abspath(os.getcwd())
+    target_absolute_path = os.path.abspath(path)
+
+    if os.path.isdir(target_absolute_path):
+        target_absolute_path += "/"
+
+    target_deepest_dir = os.path.dirname(target_absolute_path)
+    os.chdir(target_deepest_dir)
+
+    target_project_dir = run_shell("git rev-parse --show-toplevel").rstrip("\n")
+    target_project_dir += "/"
+    is_gropening_project_root = target_absolute_path == target_project_dir
+
+    target_relative_path = (
+        CURRENT_DIR_PATH
+        if is_gropening_project_root
+        else target_absolute_path.replace(target_project_dir, "")
+    )
+
+    os.chdir(working_dir)
+
+    return {
+        "working_dir": working_dir,
+        "target_project_dir": target_project_dir,
+        "target_relative_path": target_relative_path,
+    }
+
+
 def parse_git_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     """
     Parses the result string regarding the remote repos fetched from the
@@ -190,11 +222,17 @@ def run(path):
     Runs all the steps for building and opening an URL for a given
     `path` on the remote repo.
     """
+    paths = extract_paths(path)
+    os.chdir(paths["target_project_dir"])
+
     remotes = run_shell("git remote -v")
     domain, project_path = parse_git_remotes(remotes)
     branch = run_shell("git rev-parse --abbrev-ref HEAD").rstrip("\n")
     commit = run_shell("git rev-parse HEAD").rstrip("\n")
-    remote_url = build_remote_url(domain, project_path, branch, path, commit)
+    relative_path = paths["target_relative_path"]
+    remote_url = build_remote_url(domain, project_path, branch, relative_path, commit)
+
+    os.chdir(paths["working_dir"])
     run_shell(f"open {remote_url}")
 
 

@@ -55,6 +55,21 @@ Open a file pointing out the lines of code to be highlighted:
 ```
 gropen gropen/gropen.py:42
 gropen gropen/gropen.py:16,32
+
+```
+
+Open file from an outter directory:
+
+```
+cd ~/Dev
+gropen python/gropen/gropen/gropen.py:20,30
+``
+
+Open file from an inner directory:
+
+```
+cd ~/Dev/python/gropen/gropen
+gropen gropen.py:20,30
 ```
 
 # TODO
@@ -64,9 +79,10 @@ gropen gropen/gropen.py:16,32
 - [ ] Add support for GitLab repositories;
 - [x] Open current directory;
 - [x] Open arbitrary directory and files;
-- [x] Point out the line(s) of code to be highlighted;
+- [x] Open in a line or range of lines in the file;
 - [ ] Open files in a specific commit;
-- [ ] Handle relative paths;
+- [x] Handle relative and absolute paths;
+- [ ] Support flag for only displaying the URL instead of opening it on the browser;
 - [x] Create Vim plugin;
 - [ ] Create VS Code plugin;
 - [ ] Create Sublime plugin.
