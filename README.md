@@ -63,7 +63,7 @@ Open file from an outter directory:
 ```
 cd ~/Dev
 gropen python/gropen/gropen/gropen.py:20,30
-``
+```
 
 Open file from an inner directory:
 
