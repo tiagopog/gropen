@@ -17,7 +17,7 @@ local files and directories on remote git repositories.
 ## Supported editors
 
 - [x] Vim ([gropen.vim](https://github.com/tiagopog/gropen.vim))
-- [ ] VS Code
+- [x] VS Code ([gropen.vscode](https://marketplace.visualstudio.com/manage/publishers/tiagopog/extensions/gropen-vscode/hub?_a=acquisition))
 - [ ] Sublime
 
 # Installation
