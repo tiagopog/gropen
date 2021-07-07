@@ -7,6 +7,7 @@ import os
 import re
 import sys
 import subprocess
+import webbrowser
 
 CURRENT_DIR_PATH = "."
 
@@ -233,7 +234,7 @@ def run(path):
     remote_url = build_remote_url(domain, project_path, branch, relative_path, commit)
 
     os.chdir(paths["working_dir"])
-    run_shell(f"open {remote_url}")
+    webbrowser.open(remote_url)
 
 
 def main():

@@ -10,16 +10,21 @@ local files and directories on remote git repositories.
 
 ## Supported repos
 
-- [x] GitHub
 - [x] Bitbucket
+- [x] GitHub
 - [ ] GitLab
 
 ## Supported editors
 
+- [ ] Sublime
 - [x] Vim ([gropen.vim](https://github.com/tiagopog/gropen.vim))
 - [x] VS Code ([gropen.vscode](https://github.com/tiagopog/gropen-vscode))
-- [ ] Sublime
 
+# Supported systems
+
+- [ ] Linux
+- [x] Macos
+- [ ] Windows
 
 # Installation
 
