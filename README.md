@@ -24,7 +24,7 @@ local files and directories on remote git repositories.
 
 - [ ] Linux
 - [x] Macos
-- [ ] Windows
+- [x] Windows
 
 # Installation
 
@@ -90,7 +90,7 @@ gropen gropen.py:20,30
 - [x] Handle relative and absolute paths;
 - [ ] Support flag for only displaying the URL instead of opening it on the browser;
 - [x] Create Vim plugin;
-- [ ] Create VS Code plugin;
+- [x] Create VS Code plugin;
 - [ ] Create Sublime plugin.
 
 # Contributing
