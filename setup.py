@@ -1,4 +1,5 @@
 import setuptools
+from gropen import __version__
 
 description = "CLI for opening local files on browsers based on a remote git repository"
 
@@ -7,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="gropen",
-    version="0.1.2",
+    version=__version__,
     author="Tiago Guedes",
     author_email="tiagopog@gmail.com",
     description=description,
