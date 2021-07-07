@@ -20,7 +20,7 @@ local files and directories on remote git repositories.
 - [x] Vim ([gropen.vim](https://github.com/tiagopog/gropen.vim))
 - [x] VS Code ([gropen.vscode](https://github.com/tiagopog/gropen-vscode))
 
-# Supported systems
+## Supported systems
 
 - [ ] Linux
 - [x] Macos
