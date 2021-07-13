@@ -22,8 +22,8 @@ local files and directories on remote git repositories.
 
 ## Supported systems
 
-- [ ] Linux
-- [x] Macos
+- [x] Linux
+- [x] macOS
 - [x] Windows
 
 # Installation
