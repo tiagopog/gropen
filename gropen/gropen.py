@@ -208,16 +208,6 @@ def build_versioning_path(domain, branch, commit):
         return commit
 
 
-def fix_relative_path(path):
-    """
-    Makes it possible to gropen files from any given `path` in a
-    git-versioned project.
-
-    TODO: to be implemented.
-    """
-    pass
-
-
 def run(path):
     """
     Runs all the steps for building and opening an URL for a given
