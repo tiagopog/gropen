@@ -4,17 +4,85 @@ from gropen import gropen
 
 
 class ParseGitRemotesTest(unittest.TestCase):
-    def test_parsing_several_remotes(self):
-        pass
+    def test_parsing_ssh_based_uris(self):
+        remotes = (
+            "origin\tgit@github.com:tiagopog/gropen.git (fetch)\n"
+            "origin\tgit@github.com:tiagopog/gropen.git (push)\n"
+            "bitbucket\tgit@bitbucket.org:tiagopog/gropen.git (fetch)\n"
+            "bitbucket\tgit@bitbucket.org:tiagopog/gropen.git (push)\n"
+            "github\tgit@github.com:tiagopog/gropen.git (fetch)\n"
+            "github\tgit@github.com:tiagopog/gropen.git (push)\n"
+        )
 
-    def test_parsing_git_based_uris(self):
-        pass
+        # Assertions on implicit default remote repo (origin):
+        domain, path = gropen.parse_git_remotes(remotes)
+
+        self.assertEqual(domain, gropen.GITHUB_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
+
+        # Assertions on explicit remote repo (GitHub):
+        domain, path = gropen.parse_git_remotes(remotes, remote_name="github")
+
+        self.assertEqual(domain, gropen.GITHUB_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
+
+        # Assertions on explicit remote repo (Bitbucket):
+        domain, path = gropen.parse_git_remotes(remotes, remote_name="bitbucket")
+
+        self.assertEqual(domain, gropen.BITBUCKET_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
 
     def test_parsing_http_based_uris(self):
-        pass
+        remotes = (
+            "origin\thttps://github.com/tiagopog/gropen (fetch)\n"
+            "origin\thttps://github.com/tiagopog/gropen (push)\n"
+            "bitbucket\thttps://tiagopog@bitbucket.org/tiagopog/gropen.git (fetch)\n"
+            "bitbucket\thttps://tiagopog@bitbucket.org/tiagopog/gropen.git (push)\n"
+            "github\thttps://github.com/tiagopog/gropen.git (fetch)\n"
+            "github\thttps://github.com/tiagopog/gropen.git (push)\n"
+        )
+
+        # Assertions on implicit default remote repo (origin):
+        domain, path = gropen.parse_git_remotes(remotes)
+
+        self.assertEqual(domain, gropen.GITHUB_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
+
+        # Assertions on explicit remote repo (GitHub):
+        domain, path = gropen.parse_git_remotes(remotes, remote_name="github")
+
+        self.assertEqual(domain, gropen.GITHUB_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
+
+        # Assertions on explicit remote repo (Bitbucket):
+        domain, path = gropen.parse_git_remotes(remotes, remote_name="bitbucket")
+
+        self.assertEqual(domain, gropen.BITBUCKET_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
 
     def test_parsing_with_no_origin_remote(self):
-        pass
+        remotes = (
+            "bitbucket\thttps://tiagopog@bitbucket.org/tiagopog/gropen.git (fetch)\n"
+            "bitbucket\thttps://tiagopog@bitbucket.org/tiagopog/gropen.git (push)\n"
+            "github\thttps://github.com/tiagopog/gropen.git (fetch)\n"
+            "github\thttps://github.com/tiagopog/gropen.git (push)\n"
+        )
+
+        # Assertions on implicit default remote repo (origin):
+        expected_error = gropen.UnsupportedRemoteError
+        self.assertRaises(expected_error, gropen.parse_git_remotes, remotes)
+
+        # Assertions on explicit remote repo (GitHub):
+        domain, path = gropen.parse_git_remotes(remotes, remote_name="github")
+
+        self.assertEqual(domain, gropen.GITHUB_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
+
+        # Assertions on explicit remote repo (Bitbucket):
+        domain, path = gropen.parse_git_remotes(remotes, remote_name="bitbucket")
+
+        self.assertEqual(domain, gropen.BITBUCKET_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen")
 
 
 class BuildRemoteURLTest(unittest.TestCase):
@@ -47,7 +115,7 @@ class BuildRemoteURLTest(unittest.TestCase):
 
         self.assertEqual(url, expected_url)
 
-    def test_building_file_path__for_github(self):
+    def test_building_file_path_with_complex_branch_name_for_github(self):
         domain = gropen.GITHUB_DOMAIN
         project_path = "username/my-project"
         branch = "release/2.4.8"
@@ -55,7 +123,9 @@ class BuildRemoteURLTest(unittest.TestCase):
         commit = "1217ac95844c1ae1deca58144133d68f3b171056"
 
         url = gropen.build_remote_url(domain, project_path, branch, path, commit)
-        expected_url = "https://github.com/username/my-project/blob/release/2.4.8/foo/bar.py"
+        expected_url = (
+            "https://github.com/username/my-project/blob/release/2.4.8/foo/bar.py"
+        )
 
         self.assertEqual(url, expected_url)
 
@@ -110,7 +180,7 @@ class BuildRemoteURLTest(unittest.TestCase):
 
         self.assertEqual(url, expected_url)
 
-    def test_building_file_path_in_branch_with_paths_for_bitbucket(self):
+    def test_building_file_path_with_complex_branch_name_for_bitbucket(self):
         domain = gropen.BITBUCKET_DOMAIN
         project_path = "username/my-project"
         branch = "release/2.4.8"

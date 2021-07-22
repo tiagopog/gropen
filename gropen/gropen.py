@@ -31,7 +31,11 @@ LINE_ANCHOR_REPLACEMENT = {
 }
 
 REMOTE_PARSE_REGEX = (
-    r"{remote_name}\t(https://|git@)(?P<domain>[\w\-\.]+)(\/|:)(?P<path>[\w\-\/]+)"
+    r"{remote_name}(\t|\s)+"
+    r"(https?://)?((?P<userinfo>[\w:]+)@)?"
+    r"(?P<domain>[\w\-\.]+)(\/|:)"
+    r"(?P<path>[\w\-\/]+)"
+    r"(.git)?\s+\((fetch|push)\)"
 )
 
 
