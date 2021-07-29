@@ -34,8 +34,8 @@ REMOTE_PARSE_REGEX = (
     r"{remote_name}(\t|\s)+"
     r"(https?://)?((?P<userinfo>[\w:]+)@)?"
     r"(?P<domain>[\w\-\.]+)(\/|:)"
-    r"(?P<path>[\w\-\/]+)"
-    r"(.git)?\s+\((fetch|push)\)"
+    r"(?P<path>[\w\.\-\_\/]+)"
+    r"\s+\((fetch|push)\)"
 )
 
 
@@ -105,7 +105,11 @@ def parse_git_remotes(remotes, remote_name=DEFAULT_REMOTE_NAME):
     if not match:
         raise UnsupportedRemoteError
 
-    return match.group("domain"), match.group("path")
+    domain = match.group("domain")
+    path = match.group("path")
+    path = re.sub(r".git$", "", path)
+
+    return domain, path
 
 
 def build_remote_url(

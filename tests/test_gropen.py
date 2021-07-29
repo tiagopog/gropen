@@ -84,6 +84,16 @@ class ParseGitRemotesTest(unittest.TestCase):
         self.assertEqual(domain, gropen.BITBUCKET_DOMAIN)
         self.assertEqual(path, "tiagopog/gropen")
 
+    def test_parsing_uri_paths_with_non_alphanumeric_chars(self):
+        remotes = (
+            "origin\thttps://github.com/tiagopog/gropen.foo_bar-foobar.git (fetch)\n"
+        )
+
+        domain, path = gropen.parse_git_remotes(remotes)
+
+        self.assertEqual(domain, gropen.GITHUB_DOMAIN)
+        self.assertEqual(path, "tiagopog/gropen.foo_bar-foobar")
+
 
 class BuildRemoteURLTest(unittest.TestCase):
     def test_building_url_for_unsupported_remoted_repo(self):
