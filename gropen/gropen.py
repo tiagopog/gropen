@@ -218,7 +218,7 @@ def build_versioning_path(domain, branch, commit):
         return commit
 
 
-def run(path):
+def run(path, url_only=False):
     """
     Runs all the steps for building and opening an URL for a given
     `path` on the remote repo.
@@ -234,10 +234,14 @@ def run(path):
     remote_url = build_remote_url(domain, project_path, branch, relative_path, commit)
 
     os.chdir(paths["working_dir"])
-    webbrowser.open(remote_url)
+
+    if url_only:
+        print(remote_url)
+    else:
+        webbrowser.open(remote_url)
 
 
-def main(options=None):
+def main(args, options=None):
     """
     Command line application's entry point.
     """
@@ -245,11 +249,9 @@ def main(options=None):
         print(__version__)
         return
 
-    has_arguments = len(sys.argv) > 1
-    path = sys.argv[1] if has_arguments else DEFAULT_SOURCE_PATH
-
     try:
-        run(path)
+        path = args[0] if args else DEFAULT_SOURCE_PATH
+        run(path, options.url_only)
     except UnsupportedRemoteError as error:
         print(error)
         os._exit(os.EX_USAGE)

@@ -6,7 +6,8 @@ It's executed when gropen directory is called as script.
 from .gropen import main
 from optparse import OptionParser
 
-parser = OptionParser()
+usage = "usage: gropen [options] local_path_to_gropen"
+parser = OptionParser(usage=usage)
 
 parser.add_option(
     "-v",
@@ -17,6 +18,14 @@ parser.add_option(
     help="gropen version",
 )
 
-(options, _) = parser.parse_args()
+parser.add_option(
+    "-u",
+    "--url",
+    action="store_true",
+    dest="url_only",
+    default=False,
+    help="prints the repo URL instead of opening it on a web browser",
+)
 
-main(options)
+(options, args) = parser.parse_args()
+main(args, options)
