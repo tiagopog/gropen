@@ -9,6 +9,8 @@ import sys
 import subprocess
 import webbrowser
 
+from . import __version__
+
 CURRENT_DIR_PATH = "."
 
 DEFAULT_PROTOCOL = "https://"
@@ -235,10 +237,14 @@ def run(path):
     webbrowser.open(remote_url)
 
 
-def main():
+def main(options=None):
     """
     Command line application's entry point.
     """
+    if options.version:
+        print(__version__)
+        return
+
     has_arguments = len(sys.argv) > 1
     path = sys.argv[1] if has_arguments else DEFAULT_SOURCE_PATH
 

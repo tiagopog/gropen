@@ -4,5 +4,19 @@ It's executed when gropen directory is called as script.
 """
 
 from .gropen import main
+from optparse import OptionParser
 
-main()
+parser = OptionParser()
+
+parser.add_option(
+    "-v",
+    "--version",
+    action="store_true",
+    dest="version",
+    default=False,
+    help="gropen version",
+)
+
+(options, _) = parser.parse_args()
+
+main(options)
