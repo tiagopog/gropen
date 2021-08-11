@@ -5,9 +5,9 @@ It contains all the logic for building and openning URLs on remote repos.
 
 import os
 import re
-import sys
 import subprocess
 import webbrowser
+from optparse import OptionParser
 
 from . import __version__
 
@@ -241,10 +241,40 @@ def run(path, url_only=False):
         webbrowser.open(remote_url)
 
 
-def main(args, options=None):
+def parse_user_inputs():
+    """
+    Helper function to parse CLI arguments and options.
+    """
+    usage = "usage: gropen [options] local_path_to_gropen"
+    parser = OptionParser(usage=usage)
+
+    parser.add_option(
+        "-v",
+        "--version",
+        action="store_true",
+        dest="version",
+        default=False,
+        help="show gropen version",
+    )
+
+    parser.add_option(
+        "-u",
+        "--url",
+        action="store_true",
+        dest="url_only",
+        default=False,
+        help="show the repo URL instead of opening it on a web browser",
+    )
+
+    return parser.parse_args()
+
+
+def main():
     """
     Command line application's entry point.
     """
+    (options, args) = parse_user_inputs()
+
     if options.version:
         print(__version__)
         return
