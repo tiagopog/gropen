@@ -245,7 +245,7 @@ def parse_user_inputs():
     """
     Helper function to parse CLI arguments and options.
     """
-    usage = "usage: gropen [options] local_path_to_gropen"
+    usage = "usage: gropen [options] local_path"
     parser = OptionParser(usage=usage)
 
     parser.add_option(
