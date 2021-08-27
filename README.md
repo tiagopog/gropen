@@ -82,7 +82,7 @@ gropen gropen.py:20,30
 
 - [x] Add support for GitHub repositories;
 - [x] Add support for Bitbucket repositories;
-- [ ] Add support for GitLab repositories;
+- [x] Add support for GitLab repositories;
 - [x] Open current directory;
 - [x] Open arbitrary directory and files;
 - [x] Open in a line or range of lines in the file;

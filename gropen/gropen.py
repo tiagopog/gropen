@@ -18,18 +18,29 @@ DEFAULT_REMOTE_NAME = "origin"
 DEFAULT_GIT_BRANCH = "main"
 DEFAULT_SOURCE_PATH = CURRENT_DIR_PATH
 
-GITHUB_DOMAIN = "github.com"
 BITBUCKET_DOMAIN = "bitbucket.org"
+GITHUB_DOMAIN = "github.com"
+GITLAB_DOMAIN = "gitlab.com"
 
-REMOTE_TREE_PATH = {GITHUB_DOMAIN: "tree", BITBUCKET_DOMAIN: "src"}
-REMOTE_SOURCE_PATH = {GITHUB_DOMAIN: "blob", BITBUCKET_DOMAIN: "src"}
+REMOTE_TREE_PATH = {
+    BITBUCKET_DOMAIN: "src",
+    GITHUB_DOMAIN: "tree",
+    GITLAB_DOMAIN: "tree",
+}
+
+REMOTE_SOURCE_PATH = {
+    BITBUCKET_DOMAIN: "src",
+    GITHUB_DOMAIN: "blob",
+    GITLAB_DOMAIN: "blob",
+}
 
 START_LINE_ANCHOR_REGEX = re.compile(r":(\d+)")
 END_LINE_ANCHOR_REGEX = re.compile(r",(\d+)$")
 
 LINE_ANCHOR_REPLACEMENT = {
-    GITHUB_DOMAIN: {"start_line": "#L\\1", "end_line": "-L\\1"},
     BITBUCKET_DOMAIN: {"start_line": "#lines-\\1", "end_line": ":\\1"},
+    GITHUB_DOMAIN: {"start_line": "#L\\1", "end_line": "-L\\1"},
+    GITLAB_DOMAIN: {"start_line": "#L\\1", "end_line": "-\\1"},
 }
 
 REMOTE_PARSE_REGEX = (
@@ -152,21 +163,32 @@ def build_remote_source_path(domain, path):
     Builds a proper path for source files which may vary for each remote
     repo supported by gropen.
 
+    Source path on Bitbucket:
+
+     - path/to/src/**/*.*
+
     Source path on GitHub:
 
      - path/to/tree/**/
      - path/to/blob/**/*.*
 
-    Source path on Bitbucket:
+    Source path on GitLab:
 
-     - path/to/src/**/*.*
+     - path/to/-/tree/**/
+     - path/to/-/blob/**/*.*
 
     """
     try:
-        if path == CURRENT_DIR_PATH:
-            return REMOTE_TREE_PATH[domain]
+        source_path = ""
+
+        if domain == GITLAB_DOMAIN:
+            source_path += "-/"
+
+        if path == CURRENT_DIR_PATH or re.search("/$", path):
+            source_path += REMOTE_TREE_PATH[domain]
         else:
-            return REMOTE_SOURCE_PATH[domain]
+            source_path += REMOTE_SOURCE_PATH[domain]
+        return source_path
     except KeyError:
         raise UnsupportedRemoteError
 
@@ -205,17 +227,17 @@ def build_versioning_path(domain, branch, commit):
     remote provider supported by gropen.
 
     This is pretty much due to some remote repos like Bitbucket not
-    supporting branches with a path in URL paths, for instance, for a
+    supporting branches with a path ("/") in URL paths, for instance, for a
     branch named as "feature/add-bar":
 
     * Not supported: https://bitbucket.org/my-account/my-project/src/feature/add-bar/bar.py
     * Supported: https://bitbucket.org/my-account/my-project/src/366f5aad6900555eb79c8525b95a568928736e1b/bar.py
 
     """
-    if domain == GITHUB_DOMAIN or "/" not in branch:
-        return branch
-    else:
+    if domain == BITBUCKET_DOMAIN and "/" in branch:
         return commit
+    else:
+        return branch
 
 
 def run(path, url_only=False):
