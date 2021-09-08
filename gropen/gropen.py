@@ -55,7 +55,7 @@ REMOTE_PARSE_REGEX = (
 class UnsupportedRemoteError(Exception):
     """
     Error class to be raised when something fails while trying to parse
-    git-related data on the user's local environment.
+    git-related data in the user's local environment.
     """
 
     DEFAULT_MESSAGE = "Error: non-existing or unsupported remote git repository"
@@ -133,7 +133,7 @@ def build_remote_url(
     commit=None,
 ):
     """
-    Builds the URL that will be opened on the user's default browser.
+    Builds the URL that will be opened in the user's default browser.
 
     For instance, "github.com/tiagopog/gropen/blob/main/gropen/gropen.py"
     gets composed as:
@@ -243,7 +243,7 @@ def build_versioning_path(domain, branch, commit):
 def run(path, url_only=False):
     """
     Runs all the steps for building and opening an URL for a given
-    `path` on the remote repo.
+    `path` in the remote repo.
     """
     paths = extract_paths(path)
     os.chdir(paths["target_project_dir"])

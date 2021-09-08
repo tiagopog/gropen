@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/513113a78c8843c094a2/maintainability)](https://codeclimate.com/github/tiagopog/gropen/maintainability)
 
 `gropen` (Git Remote Open) is a simple command line application for opening
-local files and directories on remote git repositories.
+local files and directories in remote git repositories.
 
 ![gropen_example](https://user-images.githubusercontent.com/760933/111877395-f8a0b400-8981-11eb-98c8-ad5f0a21b78d.gif)
 
@@ -88,7 +88,7 @@ gropen gropen.py:20,30
 - [x] Open in a line or range of lines in the file;
 - [ ] Open files in a specific commit;
 - [x] Handle relative and absolute paths;
-- [ ] Support flag for only displaying the URL instead of opening it on the browser;
+- [x] Support flag for only displaying the URL instead of opening it in the browser;
 - [x] Create Vim plugin;
 - [x] Create VS Code plugin;
 - [ ] Create Sublime plugin.
